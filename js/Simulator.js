@@ -131,6 +131,7 @@ export default class Simulator {
     document.getElementById('welcome-modal-examples').addEventListener('click', e => {
       this.welcomeModal.classList.remove('is-active');
       this.loadScenario();
+      this.editor.scenarioManager.switchTab(this.editor.scenarioManager.examplesTab);
     });
 
     document.getElementById('welcome-modal-create').addEventListener('click', e => {
@@ -561,6 +562,11 @@ export default class Simulator {
   }
 
   receivePlannedPath(event) {
+    if (event.data.error) {
+      document.getElementById('planner-error').classList.remove('is-hidden');
+      return;
+    }
+
     if (this.waitingForFirstPlan && !this.plannerReset) {
       this.waitingForFirstPlan = false;
       this.autonomousModeButton.classList.remove('is-loading');
