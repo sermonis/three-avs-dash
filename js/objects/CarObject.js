@@ -1,6 +1,6 @@
-import Car from "../physics/Car.js";
-import TDSLoader from "./TDSLoader.js";
-import suvModel from "../../models/suv.js";
+import Car from '../physics/Car.js';
+import TDSLoader from './TDSLoader.js';
+import suvModel from '../../models/suv.js';
 
 const CAR_COLOR = 0x0088ff;
 const WHEEL_COLOR = 0xff8800;
@@ -75,6 +75,8 @@ export default class CarObject extends THREE.Object3D {
       object.position.setY(-box.min.y);
 
       this.add(object);
+
+	  // console.log( object );
 
       const carMaterial = new THREE.MeshToonMaterial({ color: 0x0088ff });
       const wheelMaterial = new THREE.MeshToonMaterial({ color: 0xff8800 });
