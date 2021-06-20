@@ -1,7 +1,13 @@
 export default class Car {
-  constructor(x = 0, y = 0, rotation = 0) {
-    this.setPose(x, y, rotation);
-  }
+
+	constructor( x = 0, y = 0, rotation = 0 ) {
+
+		this.setPose( x, y, rotation );
+
+		this.score = 100;
+    	this.lastTimeLogger = new Date().getTime();
+
+	}
 
   static getFrontAxlePosition(pos, rot) {
     return THREE.Vector2.fromAngle(rot).multiplyScalar(Car.WHEEL_BASE).add(pos);
@@ -54,53 +60,75 @@ export default class Car {
     this.ddCurv = 0; // derivative with respect to arc length
   }
 
-  step(dt) {
-    const curvPrev = this.curvature;
-    const dCurvPrev = this.dCurv;
+	step ( delta ) {
 
-    const drag = (0.5 * Car.DRAG_COEFF * Car.FRONTAL_AREA * Car.DENSITY_OF_AIR * Math.abs(this.velocity) + Car.ROLL_RESIST) * -this.velocity;
-    this.velocity += (this.acceleration + drag / Car.MASS) * dt;
+		const curvPrev = this.curvature;
+		const dCurvPrev = this.dCurv;
 
-    const velocitySq = this.velocity * this.velocity;
-    const maxWheelAngle = Math.clamp(Math.atan(Car.MAX_LATERAL_ACCEL * Car.WHEEL_BASE / velocitySq), 0.07, Car.MAX_WHEEL_ANGLE);
-    this.wheelAngle = Math.clamp(Math.wrapAngle(this.wheelAngle + this.wheelAngularVelocity * dt), -maxWheelAngle, maxWheelAngle);
+		const drag = ( 0.5 * Car.DRAG_COEFF * Car.FRONTAL_AREA * Car.DENSITY_OF_AIR * Math.abs( this.velocity ) + Car.ROLL_RESIST ) * -this.velocity;
+		this.velocity += ( this.acceleration + drag / Car.MASS ) * delta;
 
-    const angularVelocity = this.velocity * this.curvature;
-    this.rotation = Math.wrapAngle(this.rotation + angularVelocity * dt);
+		const velocitySq = this.velocity * this.velocity;
+		const maxWheelAngle = Math.clamp( Math.atan( Car.MAX_LATERAL_ACCEL * Car.WHEEL_BASE / velocitySq ), 0.07, Car.MAX_WHEEL_ANGLE );
+		this.wheelAngle = Math.clamp( Math.wrapAngle( this.wheelAngle + this.wheelAngularVelocity * delta ), -maxWheelAngle, maxWheelAngle);
 
-    const dist = this.velocity * dt;
-    this.position = THREE.Vector2.fromAngle(this.rotation).multiplyScalar(dist).add(this.position);
+		const angularVelocity = this.velocity * this.curvature;
+		this.rotation = Math.wrapAngle( this.rotation + angularVelocity * delta );
 
-    this.dCurv = dist > 0.1 ? (this.curvature - curvPrev) / dist : 0;
-    this.ddCurv = dist > 0.1 ? (this.dCurv - dCurvPrev) / dist : 0;
-  }
+		const dist = this.velocity * delta;
+		this.position = THREE.Vector2.fromAngle( this.rotation ).multiplyScalar( dist ).add( this.position );
 
-  update(controls, dt) {
-    const gas = Math.clamp(controls.gas, -1, +1);
-    const brake = Math.clamp(controls.brake, 0, 1);
-    const steer = Math.clamp(controls.steer, -1, +1);
+		this.dCurv = dist > 0.1 ? ( this.curvature - curvPrev ) / dist : 0;
+		this.ddCurv = dist > 0.1 ? ( this.dCurv - dCurvPrev ) / dist : 0;
 
-    if (brake > 0) {
-      this.acceleration = -Math.sign(this.velocity) * Car.MAX_BRAKE_DECEL * brake;
-      const newVelocity = this.velocity + this.acceleration * dt;
+	}
 
-      // If applying the braking deceleration at the next step would cause the velocity
-      // to change directions, then just set the car as stopped.
-      if (Math.sign(newVelocity) != Math.sign(this.velocity)) {
-        this.velocity = 0;
-        this.acceleration = 0;
-      }
-    } else {
-      this.acceleration = Car.MAX_GAS_ACCEL * gas;
-    }
+	update ( controls, delta ) {
 
-    if (steer != 0) {
-      this.wheelAngularVelocity = steer * Car.MAX_STEER_SPEED;
-    } else {
-      this.wheelAngularVelocity = Math.clamp(-this.wheelAngle / Car.MAX_WHEEL_ANGLE * this.velocity * this.velocity * dt, -Car.MAX_STEER_SPEED, Car.MAX_STEER_SPEED);
-    }
-  }
-}
+		const gas = Math.clamp( controls.gas, -1, +1 );
+		const brake = Math.clamp( controls.brake, 0, 1 );
+		const steer = Math.clamp( controls.steer, -1, +1 );
+
+		if ( brake > 0 ) {
+
+			this.acceleration = -Math.sign( this.velocity ) * Car.MAX_BRAKE_DECEL * brake;
+			const newVelocity = this.velocity + this.acceleration * delta;
+
+			// If applying the braking deceleration at the next step would cause the velocity
+			// to change directions, then just set the car as stopped.
+			if ( Math.sign( newVelocity ) != Math.sign( this.velocity ) ) {
+
+				this.velocity = 0;
+				this.acceleration = 0;
+
+			}
+
+		} else {
+
+			this.acceleration = Car.MAX_GAS_ACCEL * gas;
+
+		}
+
+		if ( steer != 0 ) {
+
+			this.wheelAngularVelocity = steer * Car.MAX_STEER_SPEED;
+
+		} else {
+
+			this.wheelAngularVelocity = Math.clamp( -this.wheelAngle / Car.MAX_WHEEL_ANGLE * this.velocity * this.velocity * delta, -Car.MAX_STEER_SPEED, Car.MAX_STEER_SPEED );
+
+		}
+
+		if ( new Date().getTime() - this.lastTimeLogger > 5000 ) {
+
+			this.lastTimeLogger = new Date().getTime();
+			console.log( this );
+
+		}
+
+	}
+
+};
 
 Car.HALF_CAR_LENGTH = 2.5; // meters
 Car.HALF_CAR_WIDTH = 1; // meters

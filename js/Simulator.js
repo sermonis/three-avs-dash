@@ -1,49 +1,53 @@
-import Physics from "./physics/Physics.js";
-import Path from "./autonomy/Path.js";
-import CubicPath from "./autonomy/path-planning/CubicPath.js";
-import AutonomousController from "./autonomy/control/AutonomousController.js";
-import FollowController from "./autonomy/control/FollowController.js";
-import ManualController from "./autonomy/control/ManualController.js";
-import MapObject from "./objects/MapObject.js";
-import CarObject from "./objects/CarObject.js";
-import StaticObstacleObject from "./objects/StaticObstacleObject.js";
-import DynamicObstacleObject from "./objects/DynamicObstacleObject.js";
-import Editor from "./simulator/Editor.js";
-import OrbitControls from "./simulator/OrbitControls.js";
-import TopDownCameraControls from "./simulator/TopDownCameraControls.js";
-import Dashboard from "./simulator/Dashboard.js";
-import GPGPU from "./GPGPU.js";
-import RoadLattice from "./autonomy/path-planning/RoadLattice.js";
-import PathPlanner from "./autonomy/path-planning/PathPlanner.js";
-import StaticObstacle from "./autonomy/StaticObstacle.js";
-import DynamicObstacle from "./autonomy/DynamicObstacle.js";
-import MovingAverage from "./autonomy/MovingAverage.js";
-import PathPlannerConfigEditor from "./simulator/PathPlannerConfigEditor.js";
+import Physics from './physics/Physics.js';
+import Path from './autonomy/Path.js';
+import CubicPath from './autonomy/path-planning/CubicPath.js';
+import AutonomousController from './autonomy/control/AutonomousController.js';
+import FollowController from './autonomy/control/FollowController.js';
+import ManualController from './autonomy/control/ManualController.js';
+import MapObject from './objects/MapObject.js';
+import CarObject from './objects/CarObject.js';
+import StaticObstacleObject from './objects/StaticObstacleObject.js';
+import DynamicObstacleObject from './objects/DynamicObstacleObject.js';
+import Editor from './simulator/Editor.js';
+import OrbitControls from './simulator/OrbitControls.js';
+import TopDownCameraControls from './simulator/TopDownCameraControls.js';
+import Dashboard from './simulator/Dashboard.js';
+import GPGPU from './GPGPU.js';
+import RoadLattice from './autonomy/path-planning/RoadLattice.js';
+import PathPlanner from './autonomy/path-planning/PathPlanner.js';
+import StaticObstacle from './autonomy/StaticObstacle.js';
+import DynamicObstacle from './autonomy/DynamicObstacle.js';
+import MovingAverage from './autonomy/MovingAverage.js';
+import PathPlannerConfigEditor from './simulator/PathPlannerConfigEditor.js';
 
 const FRAME_TIMESTEP = 1 / 60;
 const WELCOME_MODAL_KEY = 'dash_WelcomeModal';
 
 export default class Simulator {
-  constructor(domElement) {
-    this.pathPlannerWorker = new Worker(URL.createObjectURL(new Blob([`(${dash_initPathPlannerWorker.toString()})()`], { type: 'text/javascript' })));
-    this.pathPlannerWorker.onmessage = this.receivePlannedPath.bind(this);
-    this.pathPlannerConfigEditor = new PathPlannerConfigEditor();
 
-    this.physics = new Physics();
-    this.car = this.physics.createCar();
+	constructor ( domElement ) {
 
-    this.renderer = new THREE.WebGLRenderer({ antialias: true });
-    this.renderer.setPixelRatio(window.devicePixelRatio);
-    this.renderer.setSize(domElement.clientWidth, domElement.clientHeight);
-    this.renderer.shadowMap.enabled = true;
-    domElement.appendChild(this.renderer.domElement);
+		this.lastPrintTime = new Date().getTime();
 
-    this.lastPlanParams = null;
-    this.renderer.context.canvas.addEventListener('webglcontextlost', event => {
-      console.log('Simulator: webgl context lost');
-      console.log(event);
-      console.log(this.lastPlanParams);
-    });
+		this.pathPlannerWorker = new Worker(URL.createObjectURL(new Blob([`(${dash_initPathPlannerWorker.toString()})()`], { type: 'text/javascript' })));
+		this.pathPlannerWorker.onmessage = this.receivePlannedPath.bind(this);
+		this.pathPlannerConfigEditor = new PathPlannerConfigEditor();
+
+		this.physics = new Physics();
+		this.car = this.physics.createCar();
+
+		this.renderer = new THREE.WebGLRenderer({ antialias: true });
+		this.renderer.setPixelRatio(window.devicePixelRatio);
+		this.renderer.setSize(domElement.clientWidth, domElement.clientHeight);
+		this.renderer.shadowMap.enabled = true;
+		domElement.appendChild(this.renderer.domElement);
+
+		this.lastPlanParams = null;
+		this.renderer.context.canvas.addEventListener('webglcontextlost', event => {
+			console.log('Simulator: webgl context lost');
+			console.log(event);
+			console.log(this.lastPlanParams);
+		});
 
     this._setUpCameras(this.renderer.domElement);
 
@@ -403,14 +407,26 @@ export default class Simulator {
     this.scenarioPauseButton.classList.add('is-hidden');
   }
 
-  restartScenario() {
-    if (this.editor.enabled) return;
+	restartScenario () {
 
-    if (this.plannedPathGroup)
-      this.scene.remove(this.plannedPathGroup);
+		if ( this.editor.enabled ) {
 
-    this.finalizeEditor(false);
-  }
+			return;
+
+		}
+
+		this.car.score = 100;
+    	this.lastPrintTime = new Date().getTime();
+
+		if ( this.plannedPathGroup ) {
+
+			this.scene.remove( this.plannedPathGroup );
+
+		}
+
+		this.finalizeEditor( false );
+
+	}
 
   loadScenario() {
     if (this.editor.enabled) return;
@@ -440,7 +456,7 @@ export default class Simulator {
     if (this.editor.enabled) return;
 
     switch (mode) {
-      case "free":
+      case 'free':
         this.chaseCameraControls.enabled = false;
         this.topDownControls.enabled = false;
         this.freeCameraControls.enabled = true;
@@ -451,7 +467,7 @@ export default class Simulator {
           this.camera = this.freeCamera;
 
         break;
-      case "chase":
+      case 'chase':
         this.freeCameraControls.enabled = false;
         this.topDownControls.enabled = false;
         this.chaseCameraControls.enabled = true;
@@ -462,7 +478,7 @@ export default class Simulator {
           this.camera = this.chaseCamera;
 
         break;
-      case "topDown":
+      case 'topDown':
         this.freeCameraControls.enabled = false;
         this.chaseCameraControls.enabled = false;
         this.topDownControls.enabled = true;
@@ -676,14 +692,50 @@ export default class Simulator {
     this.plannedPathGroup.add(pathObject);
   }
 
-  step(timestamp) {
-    if (this.prevTimestamp == null) {
-      this.prevTimestamp = timestamp;
-      requestAnimationFrame(this.step.bind(this));
-      return;
-    }
+	step ( timestamp ) {
 
-    this.editor.update();
+		if ( this.prevTimestamp == null ) {
+
+			this.prevTimestamp = timestamp;
+			requestAnimationFrame( this.step.bind( this ) );
+			return;
+
+		}
+
+		this.staticObstacles.forEach( so_ => {
+
+			if ( new Date().getTime() - this.lastPrintTime > 1000
+				&& Math.abs( so_.pos.x - this.car.position.x ) < 50
+				&& Math.abs( so_.pos.y - this.car.position.y ) < 50 ) {
+
+				this.car.score = this.car.score - 5;
+
+			}
+
+			this.lastPrintTime = new Date().getTime();
+			// console.log( this.car.score );
+
+		} );
+
+		this.dynamicObstacles.forEach( do_ => {
+
+			// Get dynamic obstacle current position.
+			const doCurPos = do_.positionAtTime( timestamp );
+
+			if ( new Date().getTime() - this.lastPrintTime > 1000
+				&& Math.abs( doCurPos.x - this.car.position.x ) < 50
+				&& Math.abs( doCurPos.y - this.car.position.y ) < 50 ) {
+
+				this.car.score = this.car.score - 5;
+
+			}
+
+			this.lastPrintTime = new Date().getTime();
+			// console.log( this.car.score );
+
+		} );
+
+		this.editor.update();
 
     if (!this.editor.enabled && !this.paused) {
       const dt = FRAME_TIMESTEP;

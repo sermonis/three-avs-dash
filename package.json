@@ -1,20 +1,19 @@
 {
-  "name": "dash",
+  "name": "three-avs-dash",
   "version": "1.0.0",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack",
-    "watch": "webpack --watch"
+    "serve": "webpack serve --mode=development",
+    "watch": "webpack --watch --mode=development",
+    "build": "webpack"
   },
   "author": "Matt Bradley",
   "license": "MIT",
   "devDependencies": {
     "script-loader": "^0.7.2",
-    "webpack": "^4.0.1",
-    "webpack-cli": "^2.0.9",
-    "wrapper-webpack-plugin": "1.0.0"
-  },
-  "dependencies": {
-    "npm": "^5.7.1"
+    "webpack": "^5.39.1",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^3.11.2",
+    "wrapper-webpack-plugin": "^2.1.0"
   }
 }
