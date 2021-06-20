@@ -1,8 +1,8 @@
-# [Self-Driving Car Simulator](https://sermonis.github.io/three-avs-dash/)
+# Dash - Autonomous Visualization System ([Dash](https://sermonis.github.io/three-avs-dash/)
 
 Real-time motion planner and autonomous vehicle simulator in the browser, built with WebGL and Three.js. The project deals with an autonomous car that travels on a certain route with multiple obstacles. It's based on distributed computing using GPUs in Linux systems, based on "Parallel Algorithms for Real-time Motion Planning" by Matthew McNaughton and "State Lattice-based Motion Planning for Autonomous On-Road Driving" by Shuiying Wang.
 
-![Dash](./readme/dash.gif)
+![AVS](./readme/preview-00.gif)
 
 This project demonstrates a real-time, on-road, lattice-based autonomous vehicle motion planner in the browser. Many autonomous vehicle motion planners are implemented close to the metal in C or C++, or they utilize computing platforms like CUDA or OpenCL to generate plans in a highly parallel fashion on the GPU. Using WebGL, we can implement similar parallel planning algorithms right in the browser that can run on a variety of moderately-powerful consumer graphics cards. With Three.js, the motion planner can be executed in real-time 3D simulated scenarios.
 
