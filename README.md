@@ -122,7 +122,7 @@ npm run watch
 
 * [https://github.com/mattbradley/dash](https://github.com/sermonis/three-avs-dash)
 * [Parallel Algorithms for Real-time Motion Planning by Matthew McNaughton](./readme/docs/Parallel-Algorithms-for-Real-time-Motion-Planning-Matthew-McNaughton.pdf)
-* https://www.inf.fu-berlin.de/inst/ag-ki/rojas_home/documents/Betreute_Arbeiten/Diss-Shuiying.pdf
+* [State Lattice-based Motion Planning for Autonomous On Road Driving by Shuiying Wang](./readme/docs/State-Lattice-based-Motion-Planning-for-Autonomous-On-Road-Driving-Shuiying-Wang.pdf)
 
 ## License
 
