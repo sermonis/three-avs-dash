@@ -121,9 +121,7 @@ npm run watch
 ## Contributing
 
 * [https://github.com/mattbradley/dash](https://github.com/sermonis/three-avs-dash)
-
 * https://ri.cmu.edu/pub_files/2011/7/mcnaughton-thesis.pdf
-
 * https://www.inf.fu-berlin.de/inst/ag-ki/rojas_home/documents/Betreute_Arbeiten/Diss-Shuiying.pdf
 
 ## License
