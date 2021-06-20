@@ -1,7 +1,7 @@
-import Car from "../../physics/Car.js"
+import Car from '../../physics/Car.js';
 
 export default class FollowController {
-  constructor(path, car) {
+  constructor (path, car) {
     this.path = path;
     this.car = car;
     this.nextIndex = 1;
@@ -9,17 +9,17 @@ export default class FollowController {
     this.prevAccel = 0;
   }
 
-  reset() {
+  reset () {
     this.prevVelocity = 0;
     this.prevAccel = 0;
   }
 
-  replacePath(path) {
+  replacePath (path) {
     this.path = path;
     this.nextIndex = 1;
   }
 
-  predictPoseAfterTime(currentPose, predictionTime) {
+  predictPoseAfterTime (currentPose, predictionTime) {
     const pathPoses = this.path.poses;
     let [nextIndex, progress] = this.findNextIndex(currentPose.pos);
     let currentVelocity = currentPose.velocity;
@@ -66,7 +66,7 @@ export default class FollowController {
     }
   }
 
-  control(pose, wheelAngle, velocity, dt, lockPath = false) {
+  control (pose, wheelAngle, velocity, dt, lockPath = false) {
     const pathPoses = this.path.poses;
     const [nextIndex, progress, projection] = this.findNextIndex(pose.pos);
     this.nextIndex = nextIndex;
@@ -127,7 +127,7 @@ export default class FollowController {
     return { gas, brake, steer };
   }
 
-  findNextIndex(pos) {
+  findNextIndex (pos) {
     const pathPoses = this.path.poses;
 
     // Constrain the search to just a few points surrounding the current nextIndex
@@ -168,7 +168,7 @@ export default class FollowController {
 }
 
 // Returns [pointOnSegment, progressAlongSegment {0 - 1}]
-function projectPointOnSegment(point, start, end) {
+function projectPointOnSegment (point, start, end) {
   const distSqr = start.distanceToSquared(end);
   const progress = point.clone().sub(start).dot(end.clone().sub(start)) / distSqr;
   return [end.clone().sub(start).multiplyScalar(progress).add(start), progress];
