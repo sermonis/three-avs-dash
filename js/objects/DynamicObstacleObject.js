@@ -1,5 +1,11 @@
+/**
+**
+**/
 export default class DynamicObstacleObject extends THREE.Object3D {
 
+	/**
+	**
+	**/
 	constructor ( dynamicObstacle, lanePath ) {
 
 		super();
@@ -60,6 +66,9 @@ export default class DynamicObstacleObject extends THREE.Object3D {
 
 	}
 
+	/**
+	**
+	**/
 	update ( time ) {
 
 		const slPos = this.dynamicObstacle.positionAtTime( time );

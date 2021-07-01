@@ -1,8 +1,14 @@
 const COLOR = 0xdd0000;
 const HEIGHT = 5;
 
+/**
+**
+**/
 export default class StaticObstacleObject extends THREE.Object3D {
 
+	/**
+	**
+	**/
 	constructor ( staticObstacle ) {
 
 		super();
