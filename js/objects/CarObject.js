@@ -126,13 +126,6 @@ export default class CarObject extends THREE.Object3D {
 
 			/**
 			** Material performance:
-			**
-			** MeshPhysicalMaterial (slowest)
-			** MeshStandardMaterial
-			** MeshPhongMaterial
-			** MeshLambertMaterial
-			** MeshBasicMaterial (fastest)
-			**
 			** @see https://discourse.threejs.org/t/threejs-performance-car-visualization/26854
 			**/
 			const carMaterial = new THREE.MeshToonMaterial( { color: 0x0088ff } );
