@@ -1,3 +1,6 @@
+/**
+**
+**/
 export default class Car {
 
 	constructor( x = 0, y = 0, rotation = 0 ) {
@@ -9,57 +12,111 @@ export default class Car {
 
 	}
 
-  static getFrontAxlePosition(pos, rot) {
-    return THREE.Vector2.fromAngle(rot).multiplyScalar(Car.WHEEL_BASE).add(pos);
-  }
+	/**
+	**
+	**/
+	static getFrontAxlePosition ( pos, rot ) {
 
-  static getFakeAxlePosition(pos, rot) {
-    return Car.frontToRearAxlePosition(pos, rot);
-  }
+		return THREE.Vector2.fromAngle( rot ).multiplyScalar( Car.WHEEL_BASE ).add( pos );
 
-  static centerToRearAxlePosition(pos, rot) {
-    return THREE.Vector2.fromAngle(rot).multiplyScalar(Car.REAR_AXLE_POS).add(pos);
-  }
+	}
 
-  static frontToRearAxlePosition(pos, rot) {
-    return THREE.Vector2.fromAngle(rot).multiplyScalar(-Car.WHEEL_BASE).add(pos);
-  }
+	/**
+	**
+	**/
+	static getFakeAxlePosition ( pos, rot ) {
 
-  get pose() {
-    return { pos: this.rearAxlePosition.clone(), rot: this.rotation, velocity: this.velocity, curv: this.curvature, dCurv: this.dCurv, ddCurv: this.ddCurv };
-  }
+		return Car.frontToRearAxlePosition( pos, rot );
 
-  get curvature() {
-    return Math.tan(this.wheelAngle) / Car.WHEEL_BASE;
-  }
+	}
 
-  get rearAxlePosition() {
-    const { x, y } = this.position;
-    const rot = this.rotation;
-    return new THREE.Vector2(x + Math.cos(rot) * Car.REAR_AXLE_POS, y + Math.sin(rot) * Car.REAR_AXLE_POS);
-  }
+	/**
+	**
+	**/
+	static centerToRearAxlePosition ( pos, rot ) {
 
-  get frontAxlePosition() {
-    const { x, y } = this.position;
-    const rot = this.rotation;
-    return new THREE.Vector2(x + Math.cos(rot) * Car.FRONT_AXLE_POS, y + Math.sin(rot) * Car.FRONT_AXLE_POS);
-  }
+		return THREE.Vector2.fromAngle( rot ).multiplyScalar( Car.REAR_AXLE_POS ).add( pos );
 
-  setPose(x, y, rotation) {
-    // Translate so that x and y become the center of the vehicle (instead of the center of the rear axle)
-    x -= Car.REAR_AXLE_POS * Math.cos(rotation);
-    y -= Car.REAR_AXLE_POS * Math.sin(rotation);
+	}
 
-    this.position = new THREE.Vector2(x, y);
-    this.rotation = Math.wrapAngle(rotation);
-    this.velocity = 0;
-    this.acceleration = 0;
-    this.wheelAngle = 0;
-    this.wheelAngularVelocity = 0;
-    this.dCurv = 0; // derivative with respect to arc length
-    this.ddCurv = 0; // derivative with respect to arc length
-  }
+	/**
+	**
+	**/
+	static frontToRearAxlePosition ( pos, rot ) {
 
+		return THREE.Vector2.fromAngle( rot ).multiplyScalar( -Car.WHEEL_BASE ).add( pos );
+
+	}
+
+	/**
+	**
+	**/
+	get pose () {
+
+		return { pos: this.rearAxlePosition.clone(), rot: this.rotation, velocity: this.velocity, curv: this.curvature, dCurv: this.dCurv, ddCurv: this.ddCurv };
+
+	}
+
+	/**
+	**
+	**/
+	get curvature () {
+
+		return Math.tan( this.wheelAngle ) / Car.WHEEL_BASE;
+
+	}
+
+	/**
+	**
+	**/
+	get rearAxlePosition () {
+
+		const { x, y } = this.position;
+		const rot = this.rotation;
+
+		return new THREE.Vector2( x + Math.cos( rot ) * Car.REAR_AXLE_POS, y + Math.sin( rot ) * Car.REAR_AXLE_POS );
+
+	}
+
+	/**
+	**
+	**/
+	get frontAxlePosition () {
+
+		const { x, y } = this.position;
+		const rot = this.rotation;
+
+		return new THREE.Vector2( x + Math.cos( rot ) * Car.FRONT_AXLE_POS, y + Math.sin( rot ) * Car.FRONT_AXLE_POS );
+
+	}
+
+	/**
+	**
+	**/
+	setPose ( x, y, rotation ) {
+
+		// Translate so that x and y become the center
+		// of the vehicle (instead of the center of the rear axle).
+		x -= Car.REAR_AXLE_POS * Math.cos( rotation );
+		y -= Car.REAR_AXLE_POS * Math.sin( rotation );
+
+		this.position = new THREE.Vector2( x, y );
+		this.rotation = Math.wrapAngle( rotation );
+
+		this.velocity = 0;
+		this.acceleration = 0;
+
+		this.wheelAngle = 0;
+		this.wheelAngularVelocity = 0;
+
+		this.dCurv = 0; // derivative with respect to arc length
+		this.ddCurv = 0; // derivative with respect to arc length
+
+	}
+
+	/**
+	**
+	**/
 	step ( delta ) {
 
 		const curvPrev = this.curvature;
@@ -70,7 +127,7 @@ export default class Car {
 
 		const velocitySq = this.velocity * this.velocity;
 		const maxWheelAngle = Math.clamp( Math.atan( Car.MAX_LATERAL_ACCEL * Car.WHEEL_BASE / velocitySq ), 0.07, Car.MAX_WHEEL_ANGLE );
-		this.wheelAngle = Math.clamp( Math.wrapAngle( this.wheelAngle + this.wheelAngularVelocity * delta ), -maxWheelAngle, maxWheelAngle);
+		this.wheelAngle = Math.clamp( Math.wrapAngle( this.wheelAngle + this.wheelAngularVelocity * delta ), -maxWheelAngle, maxWheelAngle );
 
 		const angularVelocity = this.velocity * this.curvature;
 		this.rotation = Math.wrapAngle( this.rotation + angularVelocity * delta );
@@ -83,6 +140,9 @@ export default class Car {
 
 	}
 
+	/**
+	**
+	**/
 	update ( controls, delta ) {
 
 		const gas = Math.clamp( controls.gas, -1, +1 );
