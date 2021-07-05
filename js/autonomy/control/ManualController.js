@@ -1,5 +1,11 @@
+/**
+**
+**/
 export default class ManualController {
 
+	/**
+	**
+	**/
 	constructor () {
 
 		this.carKeys = {
@@ -42,6 +48,9 @@ export default class ManualController {
 
 	}
 
+	/**
+	**
+	**/
 	control () {
 
 		let gas = 0;
