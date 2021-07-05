@@ -1,5 +1,11 @@
+/**
+**
+**/
 Math.clamp = ( number, min, max ) => Math.max( min, Math.min( number, max ) );
 
+/**
+**
+**/
 Math.wrapAngle = ( angle ) => {
 
 	angle = angle % ( Math.PI * 2 );
@@ -20,8 +26,14 @@ Math.wrapAngle = ( angle ) => {
 
 };
 
+/**
+**
+**/
 THREE.Vector2.fromAngle = ( angle ) => new THREE.Vector2( Math.cos( angle ), Math.sin( angle ) );
 
+/**
+**
+**/
 THREE.Curve.prototype.getCurvatureAt = function ( u ) {
 
 	let t2 = this.getUtoTmapping( u );

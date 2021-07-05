@@ -1,3 +1,6 @@
+/**
+**
+**/
 function formatDate ( date ) {
 
 	return date && date.toLocaleDateString( undefined, {
