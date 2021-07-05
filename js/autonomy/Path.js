@@ -44,6 +44,6 @@ export default class Path {
 
 		}
 
-	},
+	}
 
 };

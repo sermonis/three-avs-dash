@@ -183,8 +183,6 @@ export default class AutonomousController {
 
 	}
 
-	//
-	//
 	/**
 	** Finds the next point the vehicle is approaching and the progress
 	** between the prev point and the next point.
